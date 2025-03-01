@@ -1,364 +1,65 @@
 <!DOCTYPE html>
-<html>  
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>my last copy scam</title>
-    <!-- The style.css file allows you to change the look of your web pages.
-         If you include the next line in all your web pages, they will all share the same look.
-         This makes it easier to make new pages for your site. -->
-    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SilentSite</title>
+    <style>
+      body {
+        font-family: courier;
+        text-align: center;
+        font-size: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100vh;
+        overflow-y: hidden;
+      }
+      main {
+        gap: 25px;
+        width: 800px;
+        height: 450px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+      }
+      left {
+        display: block;
+        width: 400px;
+      }
+      h1 {
+        font-weight: normal;
+      }
+      updates {
+        position: absolute;
+        left: 1vw;
+        top: 2vh;
+      }
+
+      details {
+        font-size: 16px;
+        overflow-y: scroll;
+        height: 200px;
+        width: 300px;
+        text-align: left;
+        font-size: smaller;
+      }
+
+      #lastupdated {
+        font-size: smaller;
+      }
+    </style>
   </head>
-
-  <body>
-    <div id="container">
-      <div id="topBar">
-      </div>
-      <div id="headerArea">
-
-
-      </div>
-
-      <div id="flex">
-
-<body>
-  <div id="container">
-    <div id="centerWrapper">
-      <div id="topBar"></div>
-      <div id="headerArea"></div>
-
-      <div id="flex">
-        <main>
-          <div class="box3">
-            <div style="background-color:black;opacity:0.75;">
-              <div class="box2">
-                asei - he/him<br><br>
-                <a href="http://lawrencefridge.org">Public Fridge</a><br>
-                <i>Eggs, Milk, Ham, Bread, Ketchup, Mayonaise, Uranium Ore Soil</i>
-                <br><br>
-                <a>Biography</a><br>
-                <i>hi, i like games and coding and games and food and games and websites</i>
-                <br><br>
-                <a href="https://silentskiess.online/other-stuff">Other Stuff</a><br>
-                <i>Utilities and whatnot.</i>
-                <br><br>
-                <a href="https://linktr.ee/mv4pal">Tyler, The Game</a><br>
-                <i>Go support it!</i>
-                <br><br>
-                <a href="https://guns.lol/asei">Old Site</a><br>
-                <i>My old guns.lol website</i>
-                <br><br>
-                <div class="box4">
-                  <marquee behavior="scroll" direction="left" scrollamount="5"><a>1.19.25 - its me sei hi hi its sei hiiii hiiiiiiiii its me sei the real sei SeiSkiess the real one its me hiiiii</a></marquee>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-      <footer id="footer"></footer>
-    </div>
-  </div> 
-              
-  </div>
- 
-          </div>
-        </main>
-
-      </div>
-      <footer id="footer"></footer>
-    </div>
+        <h1>silent.</h1>
+        <p>
+          he/him<br>hi, i'm silent.<br>i'm just the average dude<br>i like drawing silly random things<br>i like reading i guess<br>yeah<br>it's <span id="lastupdated"></span>
+        </p>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const date = new Date();
+        document.getElementById("lastupdated").textContent = date.toLocaleDateString();
+      });
+    </script>
+    </main>
   </body>
-        <!-- THIS IS THE CSS !-->
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      justify-content: center; /* Horizontally center */
-      align-items: center; /* Vertically center */
-      background-color: #000000;
-    }
-        :root {
-          --header-image: url('');
-          --body-bg-image: url('');
-
-          /* colors */
-          --content: #000000;
-        }
-
-        /* if you have the URL of a font, you can set it below */
-        /* feel free to delete this if it's not your vibe */
-
-        /* this seems like a lot for just one font and I would have to agree 
-    but I wanted to include an example of how to include a custom font.
-    If you download a font file you can upload it onto your Neocities
-    and then link it! Many fonts have separate files for each style
-    (bold, italic, etc. T_T) which is why there are so many!
-    
-    */
-
-
-        body {
-          font-family: Courier New, Courier, monospace;          margin: 0;
-          background-color: #000000;
-          /* you can delete the line below if you'd prefer to not use an image */
-          background-size: 369px;
-          color: white;
-          background-image: var(--body-bg-image);
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-
-        /* below this line is CSS for the layout */
-
-        /* this is a CSS comment
-    to uncomment a line of CSS, remove the * and the /
-    before and after the text */
-
-
-        /* the "container" is what wraps your entire website */
-        /* if you want something (like the header) to be Wider than
-    the other elements, you will need to move that div outside
-    of the container */
-        #container {
-          max-width: 600px;
-          /* this is the width of your layout! */
-          /* if you change the above value, scroll to the bottom
-      and change the media query according to the comment! */
-          margin: 0 auto;
-          /* this centers the entire page */
-        }
-
-        /* the area below is for all links on your page
-    EXCEPT for the navigation */
-        #container a {
-          color: white;
-          font-weight: normal;
-
-          /* if you want to remove the underline
-      you can add a line below here that says:
-      text-decoration:none; */
-        }
-
-        #header {
-          width: 100%;
-          background-color: black;
-          /* header color here! */
-          height: 150px;
-          /* this is only for a background image! */
-          /* if you want to put images IN the header, 
-      you can add them directly to the <div id="header"></div> element! */
-          background-image: var(--header-image);
-          background-size: 100%;
-        }
-
-        /* navigation section!! */
-        #navbar {
-          height: 40px;
-          background-color: #13092D;
-          /* navbar color */
-          width: 100%;
-        }
-
-        #navbar ul {
-          display: flex;
-          padding: 0;
-          margin: 0;
-          list-style-type: none;
-          justify-content: space-evenly;
-        }
-
-        #navbar li {
-          padding-top: 10px;
-        }
-
-        /* navigation links*/
-        #navbar li a {
-          color: black;
-          /* navbar text color */
-          font-weight: 800;
-          text-decoration: none;
-          /* this removes the underline */
-        }
-
-        /* navigation link when a link is hovered over */
-        #navbar li a:hover {
-          color: #FFCD00;
-          text-decoration: underline;
-        }
-
-        #flex {
-          display: flex;
-        }
-
-        /* this colors BOTH sidebars
-    if you want to style them separately,
-    create styles for #leftSidebar and #rightSidebar */
-        aside {
-          background-color: black;
-          width: 100px;
-          padding: 9px;
-          font-size: 1.65em;
-          /* this makes the sidebar text slightly smaller */
-        }
-
-
-        /* this is the color of the main content area,
-    between the sidebars! */
-        main {
-          background-color: black;
-          flex: 1;
-          padding: 0px;
-          order: 2;
-          font-size: 1em;
-        }
-
-        /* what's this "order" stuff about??
-    allow me to explain!
-    if you're using both sidebars, the "order" value
-    tells the CSS the order in which to display them.
-    left sidebar is 1, content is 2, and right sidebar is 3! */
-
-        */ #leftSidebar {
-          order: 1;
-        }
-
-        #rightSidebar {
-          order: 3;
-        }
-
-        footer {
-          background-color: black;
-          /* background color for footer */
-          width: 100%;
-          height: 40px;
-          padding: 10px;
-          text-align: center;
-          font-size: .65em;
-          /* this centers the footer text */
-        }
-
-        h1,
-        h2,
-        h3 {
-          color: #ffffff;
-        }
-
-        h1 {
-          font-size: 1.5em;
-        }
-
-        strong {
-          /* this styles bold text */
-          color: #ffffff;
-        }
-
-        /* this is just a cool box, it's the darker colored one */
-        .box {
-          max-width: 100%;          
-          background-color: #000000
-          border: 2px solid white;
-          padding: 5px;
-        }
-
-        .box2 {
-          background-color: rgba(black, 0.1);
-          border: 1px solid white;
-          padding: 5px;
-        }
-
-        .box3 {
-          background-image: url("https://mylastcopyscam.neocities.org/images/backgrounds/moon.png");
-          max-width: 100%;
-          height: auto;
-          background-repeat: no-repeat;
-          background-size: contain;
-          flex: 1;
-          padding: 15px;
-          order: 2;
-        }
-
-        .box4 {
-          border: 2px solid #ffffff;
-          padding: 3px;
-          width: auto;
-          height: 40px;
-          
-          
-          img {
-            -webkit-filter: grayscale(1);
-            filter: grayscale(1);
-          }
-
-          img:hover {
-            -webkit-filter: grayscale(0);
-            filter: none;
-          }
-
-          
-        }
-
-        .box5 {
-
-          background-color: black;
-          border: 1px solid white;
-          padding: 5px;
-          height: 250px;
-          width: auto;
-        }
-
-        /* CSS for extras */
-
-        #topBar {
-          width: 100%;
-          height: 30px;
-          padding: 10px;
-          font-size: .95em;
-          background-color: black;
-        }
-
-
-        /* BELOW THIS POINT IS MEDIA QUERY */
-
-        /* so you wanna change the width of your page? 
-    by default, the container width is 900px.
-    in order to keep things responsive, take your new height,
-    and then subtrack it by 100. use this new number as the 
-    "max-width" value below
-    */
-
-        @media only screen and (max-width: 500px) {
-          #flex {
-            flex-wrap: wrap;
-          }
-
-          aside {
-            width: 100%;
-          }
-
-          /* the order of the items is adjusted here for responsiveness!
-      since the sidebars would be too small on a mobile device.
-      feel free to play around with the order!
-      */
-          main {
-            order: 1;
-          }
-
-          #leftSidebar {
-            order: 2;
-          }
-
-          #rightSidebar {
-            order: 3;
-          }
-
-          #navbar ul {
-            flex-wrap: wrap;
-          }
-        }
-
-        </style>  </body>
 </html>
