@@ -1,555 +1,243 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Text Converter</title>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>50xCreative | Prefix Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --bg-primary: #f5f5f5;
-            --bg-secondary: #ffffff;
-            --text-primary: #333333;
-            --text-secondary: #666666;
-            --border-color: #dddddd;
-            --input-bg: #ffffff;
-            --input-text: #333333;
-            --button-primary: #4CAF50;
-            --button-primary-hover: #45a049;
-            --button-secondary: #2196F3;
-            --button-secondary-hover: #0b7dda;
-            --tab-active: #ffffff;
-            --tab-inactive: #f1f1f1;
-            --preview-bg: #f9f9f9;
-            --shadow-color: rgba(0,0,0,0.1);
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1e1e1e;
-            --bg-secondary: #2d2d2d;
-            --text-primary: #e0e0e0;
-            --text-secondary: #b0b0b0;
-            --border-color: #444444;
-            --input-bg: #3d3d3d;
-            --input-text: #e0e0e0;
-            --button-primary: #388e3c;
-            --button-primary-hover: #2e7d32;
-            --button-secondary: #1976D2;
-            --button-secondary-hover: #1565C0;
-            --tab-active: #2d2d2d;
-            --tab-inactive: #3d3d3d;
-            --preview-bg: #3d3d3d;
-            --shadow-color: rgba(0,0,0,0.3);
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: var(--text-primary);
-        }
-
-        .container {
-            background-color: var(--bg-secondary);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: var(--text-primary);
-        }
-
-        textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            min-height: 100px;
-            box-sizing: border-box;
-            font-family: monospace;
-            background-color: var(--input-bg);
-            color: var(--input-text);
-        }
-
-        .output-preview {
-            min-height: 80px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            padding: 15px;
-            margin-top: 10px;
-            background: var(--preview-bg);
-            font-family: Arial, sans-serif;
-            word-wrap: break-word;
-        }
-
-        .gradient-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .color-control {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        button {
-            background-color: var(--button-primary);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-            margin-right: 10px;
-            transition: background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: var(--button-primary-hover);
-        }
-
-        .copy-button {
-            background-color: var(--button-secondary);
-        }
-
-        .copy-button:hover {
-            background-color: var(--button-secondary-hover);
-        }
-
-        .flex-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        input[type="color"] {
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            border: none;
-            cursor: pointer;
-            background-color: transparent;
-        }
-
-        .tab-buttons {
-            display: flex;
-            margin-bottom: 15px;
-        }
-
-        .tab-button {
-            background-color: var(--tab-inactive);
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px 5px 0 0;
-            color: var(--text-primary);
-            margin-right: 5px;
-            transition: background-color 0.2s;
-        }
-
-        .tab-button.active {
-            background-color: var(--tab-active);
-            border-bottom: 1px solid var(--tab-active);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .color-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 5px;
-            color: var(--text-primary);
-        }
-
-        .color-swatch {
-            width: 20px;
-            height: 20px;
-            border: 1px solid var(--border-color);
-            display: inline-block;
-        }
-
-        .header-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .theme-toggle {
-            background-color: var(--button-secondary);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-        }
-
-        .theme-toggle:hover {
-            background-color: var(--button-secondary-hover);
-        }
-
-        .theme-icon {
-            width: 16px;
-            height: 16px;
-            display: inline-block;
-        }
-
-        @media (max-width: 600px) {
-            .gradient-controls {
-                flex-direction: column;
-            }
-            .header-controls {
-                flex-direction: column;
-                gap: 10px;
-            }
-            h1 {
-                margin-bottom: 10px;
-            }
-        }
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+      }
     </style>
-</head>
-<body>
-    <div class="header-controls">
-        <h1>Non-AI Generated Conversion Siter</h1>
-        <button id="themeToggle" class="theme-toggle">
-            <span id="themeIcon" class="theme-icon">🌙</span>
-            <span id="themeText">Dark Mode</span>
-        </button>
-    </div>
-    
-    <div class="tab-buttons">
-        <div class="tab-button active" data-tab="simple">Thisdiv>
-        <div class="tab-button" data-tab="gradient">website</div>
-        <div class="tab-button" data-tab="preview">works</div>
-    </div>
-    
-    <div class="container tab-content active" id="simple">
-        <h2>Simple Text Conversion</h2>
-        <div class="form-group">
-            <label for="inputText">Enter your text:</label>
-            <textarea id="inputText" placeholder="Type your text here..."></textarea>
-        </div>
-        <div class="form-group">
-            <label for="singleColorPicker">Select a color:</label>
-            <div class="flex-row">
-                <input type="color" id="singleColorPicker" value="#BE3CEA">
-                <span id="hexValue">#BE3CEA</span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="outputText">Converted text (with hex code):</label>
-            <textarea id="outputText" readonly></textarea>
-        </div>
-        <button id="copySimpleButton" class="copy-button">Copy to Clipboard</button>
-    </div>
-    
-    <div class="container tab-content" id="gradient">
-        <h2>Gradient Text Generator</h2>
-        <div class="form-group">
-            <label for="gradientInputText">Enter your text:</label>
-            <textarea id="gradientInputText" placeholder="Type your text here..."></textarea>
-        </div>
-        
-        <div class="form-group">
-            <label>Gradient Colors:</label>
-            <div class="gradient-controls">
-                <div class="color-control">
-                    <div class="color-info">
-                        <span>Start Color:</span>
-                        <div class="color-swatch" id="startColorSwatch" style="background-color: #BE3CEA;"></div>
-                    </div>
-                    <input type="color" id="startColor" value="#BE3CEA">
-                    <span id="startHexValue">#BE3CEA</span>
-                </div>
-                
-                <div class="color-control">
-                    <div class="color-info">
-                        <span>End Color:</span>
-                        <div class="color-swatch" id="endColorSwatch" style="background-color: #9400FF;"></div>
-                    </div>
-                    <input type="color" id="endColor" value="#9400FF">
-                    <span id="endHexValue">#9400FF</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="gradientOutputText">Gradient text (with hex codes):</label>
-            <textarea id="gradientOutputText" readonly></textarea>
-        </div>
-        <button id="copyGradientButton" class="copy-button">Copy to Clipboard</button>
-    </div>
-    
-    <div class="container tab-content" id="preview">
-        <h2>Live Preview</h2>
-        <div class="form-group">
-            <label>Text Preview:</label>
-            <div id="livePreview" class="output-preview">
-                Preview will appear here
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Basic character conversion map
-        const convertText = (text) => {
-            const map = {
-                'A': 'ᴀ', 'B': 'ʙ', 'C': 'ᴄ', 'D': 'ᴅ', 'E': 'ᴇ', 'F': 'ғ',
-                'G': 'ɢ', 'H': 'ʜ', 'I': 'ɪ', 'J': 'ᴊ', 'K': 'ᴋ', 'L': 'ʟ',
-                'M': 'ᴍ', 'N': 'ɴ', 'O': 'ᴏ', 'P': 'ᴘ', 'Q': 'ᴏ̨', 'R': 'ʀ',
-                'S': 's', 'T': 'ᴛ', 'U': 'ᴜ', 'V': 'ᴠ', 'W': 'ᴡ', 'X': 'x',
-                'Y': 'ʏ', 'Z': 'ᴢ'
-            };
-            return text.toUpperCase().split('').map(char => map[char] || char).join('');
-        };
-
-        // HEX to RGB conversion
-        const hexToRgb = (hex) => {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16)
-            } : null;
-        };
-
-        // RGB to HEX conversion
-        const rgbToHex = (r, g, b) => {
-            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
-        };
-
-        // Get gradient color at specific position
-        const getGradientColor = (startColor, endColor, percent) => {
-            const start = hexToRgb(startColor);
-            const end = hexToRgb(endColor);
-            
-            const r = Math.round(start.r + percent * (end.r - start.r));
-            const g = Math.round(start.g + percent * (end.g - start.g));
-            const b = Math.round(start.b + percent * (end.b - start.b));
-            
-            return rgbToHex(r, g, b);
-        };
-
-        // DOM elements
-        const htmlElement = document.documentElement;
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const themeText = document.getElementById('themeText');
-        const inputText = document.getElementById('inputText');
-        const gradientInputText = document.getElementById('gradientInputText');
-        const singleColorPicker = document.getElementById('singleColorPicker');
-        const startColor = document.getElementById('startColor');
-        const endColor = document.getElementById('endColor');
-        const outputText = document.getElementById('outputText');
-        const gradientOutputText = document.getElementById('gradientOutputText');
-        const copySimpleButton = document.getElementById('copySimpleButton');
-        const copyGradientButton = document.getElementById('copyGradientButton');
-        const hexValue = document.getElementById('hexValue');
-        const startHexValue = document.getElementById('startHexValue');
-        const endHexValue = document.getElementById('endHexValue');
-        const livePreview = document.getElementById('livePreview');
-        const startColorSwatch = document.getElementById('startColorSwatch');
-        const endColorSwatch = document.getElementById('endColorSwatch');
-        const tabButtons = document.querySelectorAll('.tab-button');
-
-        // Theme toggle functionality
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = htmlElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            htmlElement.setAttribute('data-theme', newTheme);
-            
-            // Update icon and text
-            if (newTheme === 'dark') {
-                themeIcon.textContent = '☀️';
-                themeText.textContent = 'Non AI-Generated Light Mode';
-            } else {
-                themeIcon.textContent = '🌙';
-                themeText.textContent = 'Non-AI-Generated Light Mode';
-            }
-            
-            // Save preference in localStorage
-            localStorage.setItem('preferredTheme', newTheme);
-        });
-
-        // Check for saved theme preference
-        const savedTheme = localStorage.getItem('preferredTheme');
-        if (savedTheme) {
-            htmlElement.setAttribute('data-theme', savedTheme);
-            
-            if (savedTheme === 'dark') {
-                themeIcon.textContent = '☀️';
-                themeText.textContent = 'Light Mode';
-            }
-        }
-        
-        // Check for system preference if no saved preference
-        else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            htmlElement.setAttribute('data-theme', 'dark');
-            themeIcon.textContent = '☀️';
-            themeText.textContent = 'Light Mode';
-        }
-
-        // Tab switching
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const tabName = button.getAttribute('data-tab');
-                
-                // Remove active class from all tabs and contents
-                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                
-                // Add active class to current tab and content
-                button.classList.add('active');
-                document.getElementById(tabName).classList.add('active');
-                
-                updatePreview();
-            });
-        });
-
-        // Update simple text output
-        const updateSimpleOutput = () => {
-            const convertedText = convertText(inputText.value);
-            const colorHex = singleColorPicker.value.replace('#', '');
-            outputText.value = `&8[&#${colorHex}${convertedText}&8]`;
-            updatePreview();
-        };
-
-        // Update gradient text output
-        const updateGradientOutput = () => {
-            const text = gradientInputText.value;
-            const convertedText = convertText(text);
-            if (!convertedText) {
-                gradientOutputText.value = '';
-                return;
-            }
-            
-            const startColorHex = startColor.value;
-            const endColorHex = endColor.value;
-            let result = '&8[';
-            
-            const chars = convertedText.split('');
-            const steps = Math.max(1, chars.length - 1);
-            
-            chars.forEach((char, index) => {
-                const percent = steps > 0 ? index / steps : 0;
-                const color = getGradientColor(startColorHex, endColorHex, percent);
-                const colorHex = color.replace('#', '');
-                result += `&#${colorHex}${char}`;
-            });
-            
-            result += '&8]';
-            gradientOutputText.value = result;
-            updatePreview();
-        };
-
-        // Update the live preview
-        const updatePreview = () => {
-            let previewHTML = '';
-            const activeTab = document.querySelector('.tab-content.active').id;
-            
-            if (activeTab === 'simple' || activeTab === 'preview') {
-                const simpleText = inputText.value ? convertText(inputText.value) : 'sɪᴍᴘʟᴇ ᴛᴇxᴛ';
-                previewHTML = `<span style="color: ${singleColorPicker.value};">${simpleText}</span>`;
-            }
-            
-            if (activeTab === 'gradient' || activeTab === 'preview') {
-                const gradientText = gradientInputText.value ? convertText(gradientInputText.value) : 'ɢʀᴀᴅɪᴇɴᴛ ᴛᴇxᴛ';
-                let gradientHTML = '';
-                
-                const chars = gradientText.split('');
-                const steps = Math.max(1, chars.length - 1);
-                
-                chars.forEach((char, index) => {
-                    const percent = steps > 0 ? index / steps : 0;
-                    const color = getGradientColor(startColor.value, endColor.value, percent);
-                    gradientHTML += `<span style="color: ${color};">${char}</span>`;
-                });
-                
-                if (activeTab === 'preview') {
-                    previewHTML += '<br><br>' + gradientHTML;
-                } else {
-                    previewHTML = gradientHTML;
-                }
-            }
-            
-            livePreview.innerHTML = previewHTML || 'Enter some text to see a preview';
-        };
-
-        // Color picker change handlers
-        singleColorPicker.addEventListener('input', () => {
-            hexValue.textContent = singleColorPicker.value.toUpperCase();
-            updateSimpleOutput();
-        });
-
-        startColor.addEventListener('input', () => {
-            startHexValue.textContent = startColor.value.toUpperCase();
-            startColorSwatch.style.backgroundColor = startColor.value;
-            updateGradientOutput();
-        });
-
-        endColor.addEventListener('input', () => {
-            endHexValue.textContent = endColor.value.toUpperCase();
-            endColorSwatch.style.backgroundColor = endColor.value;
-            updateGradientOutput();
-        });
-
-        // Text input handlers
-        inputText.addEventListener('input', updateSimpleOutput);
-        gradientInputText.addEventListener('input', updateGradientOutput);
-
-        // Copy button handlers
-        copySimpleButton.addEventListener('click', () => {
-            outputText.select();
-            document.execCommand('copy');
-            copySimpleButton.textContent = 'Copied!';
-            setTimeout(() => {
-                copySimpleButton.textContent = 'Copy to Clipboard';
-            }, 2000);
-        });
-
-        copyGradientButton.addEventListener('click', () => {
-            gradientOutputText.select();
-            document.execCommand('copy');
-            copyGradientButton.textContent = 'Copied!';
-            setTimeout(() => {
-                copyGradientButton.textContent = 'Copy to Clipboard';
-            }, 2000);
-        });
-
-        // Initialize
-        updateSimpleOutput();
-        updateGradientOutput();
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#6366f1",
+              secondary: "#f0f2f5",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
     </script>
-</body>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-12 max-w-3xl">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Prefix Creator</h1>
+        <p class="text-gray-600">
+          Note: Kundaliel sucks ass
+        </p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <div class="mb-8">
+          <label class="block text-gray-700 text-sm font-medium mb-2"
+            >Put shit in</label
+          >
+          <textarea
+            id="inputText"
+            class="w-full h-32 p-4 border border-gray-200 rounded focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+            placeholder="Enter your text here"
+          ></textarea>
+        </div>
+        <div class="mb-8">
+          <label class="block text-gray-700 text-sm font-medium mb-2"
+            >Gradient Colors</label
+          >
+          <div class="flex gap-4">
+            <div class="flex-1">
+              <div class="text-xs text-gray-500 mb-1">Feet/div>
+              <input
+                type="color"
+                id="startColor"
+                value="#BE3CEA"
+                class="w-full h-12 rounded cursor-pointer border-none"
+              />
+            </div>
+            <div class="flex-1">
+              <div class="text-xs text-gray-500 mb-1">Head</div>
+              <input
+                type="color"
+                id="endColor"
+                value="#9400FF"
+                class="w-full h-12 rounded cursor-pointer border-none"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="mb-8">
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-gray-700 text-sm font-medium"
+              >Converted Text</label
+            >
+            <button
+              id="copyButton"
+              class="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-2 cursor-pointer"
+            >
+              <i class="ri-file-copy-line"></i>
+              Copy to Clipboard
+            </button>
+          </div>
+          <textarea
+            id="outputText"
+            class="w-full h-32 p-4 bg-gray-50 border border-gray-200 rounded resize-none"
+            readonly
+          ></textarea>
+        </div>
+        <div class="flex justify-end">
+          <button
+            id="resetButton"
+            class="bg-gray-100 text-gray-700 px-6 py-2 rounded-button hover:bg-gray-200 mr-4 cursor-pointer whitespace-nowrap"
+          >
+            Reset
+          </button>
+          <button
+            id="convertButton"
+            class="bg-primary text-white px-6 py-2 rounded-button hover:bg-primary/90 cursor-pointer whitespace-nowrap"
+          >
+            Convert Text
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      id="toast"
+      class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded shadow-lg transform translate-x-full transition-transform duration-300"
+    >
+      Copied to clipboard!
+    </div>
+    <script>
+      const inputText = document.getElementById("inputText");
+      const colorPicker = document.getElementById("colorPicker");
+      const outputText = document.getElementById("outputText");
+      const copyButton = document.getElementById("copyButton");
+      const resetButton = document.getElementById("resetButton");
+      const toast = document.getElementById("toast");
+      const convertText = (text) => {
+        const map = {
+          A: "ᴀ",
+          B: "ʙ",
+          C: "ᴄ",
+          D: "ᴅ",
+          E: "ᴇ",
+          F: "ғ",
+          G: "ɢ",
+          H: "ʜ",
+          I: "ɪ",
+          J: "ᴊ",
+          K: "ᴋ",
+          L: "ʟ",
+          M: "ᴍ",
+          N: "ɴ",
+          O: "ᴏ",
+          P: "ᴘ",
+          Q: "ᴏ̨",
+          R: "ʀ",
+          S: "s",
+          T: "ᴛ",
+          U: "ᴜ",
+          V: "ᴠ",
+          W: "ᴡ",
+          X: "x",
+          Y: "ʏ",
+          Z: "ᴢ",
+        };
+        return text
+          .toUpperCase()
+          .split("")
+          .map((char) => map[char] || char)
+          .join("");
+      };
+      const generateGradientColors = (text) => {
+        const startColor = document.getElementById("startColor").value;
+        const endColor = document.getElementById("endColor").value;
+        const result = [];
+        const steps = text.length - 1;
+        for (let i = 0; i < text.length; i++) {
+          const r = Math.round(
+            parseInt(startColor.slice(1, 3), 16) +
+              (parseInt(endColor.slice(1, 3), 16) -
+                parseInt(startColor.slice(1, 3), 16)) *
+                (i / steps),
+          );
+          const g = Math.round(
+            parseInt(startColor.slice(3, 5), 16) +
+              (parseInt(endColor.slice(3, 5), 16) -
+                parseInt(startColor.slice(3, 5), 16)) *
+                (i / steps),
+          );
+          const b = Math.round(
+            parseInt(startColor.slice(5, 7), 16) +
+              (parseInt(endColor.slice(5, 7), 16) -
+                parseInt(startColor.slice(5, 7), 16)) *
+                (i / steps),
+          );
+          result.push(
+            "#" +
+              r.toString(16).padStart(2, "0") +
+              g.toString(16).padStart(2, "0") +
+              b.toString(16).padStart(2, "0"),
+          );
+        }
+        return result;
+      };
+      const updateOutput = () => {
+        const convertedText = convertText(inputText.value);
+        const colors = generateGradientColors(convertedText);
+        let result = "&8[";
+        for (let i = 0; i < convertedText.length; i++) {
+          result += "&" + colors[i] + convertedText[i];
+        }
+        result += "&8]";
+        outputText.value = result;
+      };
+      const showToast = () => {
+        toast.classList.remove("translate-x-full");
+        setTimeout(() => {
+          toast.classList.add("translate-x-full");
+        }, 2000);
+      };
+      inputText.addEventListener("input", updateOutput);
+      document.getElementById("startColor").addEventListener("input", updateOutput);
+      document.getElementById("endColor").addEventListener("input", updateOutput);
+      copyButton.addEventListener("click", () => {
+        navigator.clipboard.writeText(outputText.value).then(() => {
+          showToast();
+        });
+      });
+      resetButton.addEventListener("click", () => {
+        inputText.value = "";
+        document.getElementById("startColor").value = "#BE3CEA";
+        document.getElementById("endColor").value = "#9400FF";
+        outputText.value = "";
+      });
+    </script>
+  </body>
 </html>
