@@ -1,189 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Console Style Command Runner</title>
-  <style>
-    body {
-      background-color: #1e1e1e;
-      color: #ffffff;
-      font-family: monospace;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    #console {
-      background-color: #000;
-      border: 2px solid #555;
-      width: 90%;
-      max-width: 600px;
-      height: 300px;
-      overflow-y: auto;
-      padding: 10px;
-      box-sizing: border-box;
-      color: #fff;
-    }
-    #input {
-      width: 90%;
-      max-width: 600px;
-      margin-top: 10px;
-      padding: 8px;
-      background-color: #000;
-      color: #fff;
-      border: 2px solid #555;
-      font-family: monospace;
-      font-size: 14px;
-    }
-  </style>
-</head>
-<body>
-  <div id="console"></div>
-  <input type="text" id="input" placeholder="Type your command and press Enter">
-
-  <script>
-    const consoleDiv = document.getElementById('console');
-    const inputField = document.getElementById('input');
-
-    // Colors for the color command
-    const colors = {
-      '0': '#000000', // Black
-      '1': '#0000AA', // Blue
-      '2': '#00AA00', // Green
-      '3': '#00AAAA', // Aqua
-      '4': '#AA0000', // Red
-      '5': '#AA00AA', // Purple
-      '6': '#AAAA00', // Yellow
-      '7': '#AAAAAA', // White
-      '8': '#555555', // Gray
-      '9': '#5555FF', // Light Blue
-      'A': '#55FF55', // Light Green
-      'B': '#55FFFF', // Light Aqua
-      'C': '#FF5555', // Light Red
-      'D': '#FF55FF', // Light Purple
-      'E': '#FFFF55', // Light Yellow
-      'F': '#FFFFFF'  // Bright White
-    };
-
-    function logToConsole(text) {
-      const line = document.createElement('div');
-      line.textContent = text;
-      consoleDiv.appendChild(line);
-      consoleDiv.scrollTop = consoleDiv.scrollHeight;
-    }
-
-    inputField.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        const command = inputField.value.trim();
-        inputField.value = '';
-        if (command) {
-          logToConsole(`> ${command}`);
-          runScript(command);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      .console-font { font-family: 'JetBrains Mono', monospace; }
+      .console-input:focus { outline: none; caret-color: #10B981; }
+      .console-history { height: calc(100vh - 120px); }
+      .console-history::-webkit-scrollbar { width: 8px; }
+      .console-history::-webkit-scrollbar-track { background: #1F2937; }
+      .console-history::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 4px; }
+      .console-history::-webkit-scrollbar-thumb:hover { background: #6B7280; }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#10B981",
+              secondary: "#6B7280",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-900 text-gray-100">
+    <div class="flex h-screen relative">
+      <div class="flex-1 p-4 flex flex-col">
+        <div class="flex items-center mb-4">
+          <div class="flex items-center gap-3">
+            <h1 class="text-xl font-bold">Web Console</h1>
+            <span class="px-2 py-1 bg-green-600 text-xs rounded-full"
+              >Online</span
+            >
+          </div>
+        </div>
+        <div
+          id="console-history"
+          class="console-history flex-1 bg-gray-800 rounded p-4 overflow-y-auto console-font text-sm"
+        >
+          <div class="text-green-400 mb-2">
+            Welcome to Web Console! Type 'help' to see available commands.
+          </div>
+        </div>
+        <div class="flex items-center mt-4 bg-gray-800 rounded p-2">
+          <span class="text-green-400 mr-2 console-font">&gt;</span>
+          <input
+            type="text"
+            id="console-input"
+            class="console-input bg-transparent flex-1 console-font text-sm text-gray-100"
+            autofocus
+          />
+        </div>
+      </div>
+      <div class="absolute top-4 right-4 flex items-center gap-4">
+        <div id="version-display" class="text-sm text-gray-400">
+          Loading version...
+        </div>
+        <button
+          id="settings-btn"
+          class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-100 transition-colors"
+        >
+          <i class="ri-settings-3-line text-xl"></i>
+        </button>
+      </div>
+    </div>
+    <script>
+      const consoleHistory = document.getElementById("console-history");
+      const consoleInput = document.getElementById("console-input");
+      let commandHistory = [];
+      let historyIndex = -1;
+      async function fetchGitHubCommits() {
+        try {
+          const response = await fetch(
+            "https://api.github.com/repos/SilentSkiess/silentskiess.github.io/commits?path=console.html",
+          );
+          const commits = await response.json();
+          const version = `v2.${commits.length}.0`;
+          document.getElementById("version-display").textContent = version;
+          return version;
+        } catch (error) {
+          console.error("Failed to fetch version:", error);
+          return "v2.5.0";
         }
       }
-    });
-
-    function runScript(command) {
-      const args = command.split(' ');
-      const baseCommand = args[0].toLowerCase();
-
-      switch (baseCommand) {
-        case 'help':
-          logToConsole('Available commands:');
-          logToConsole('- help: Displays this help message.');
-          logToConsole('- notepad: Opens your system notepad (Windows only).');
-          logToConsole('- date: Displays the current date.');
-          logToConsole('- time: Displays the current time.');
-          logToConsole('- math [expression]: Evaluates a math expression.');
-          logToConsole('- google [query]: Opens Google search for the query.');
-          logToConsole('- weather: Placeholder for weather info (customize API).');
-          logToConsole('- github: Opens the GitHub homepage.');
-          logToConsole('- color [bg][fg]: Changes console background and text colors.');
-          logToConsole('    Example: color 0A (Black background, Light Green text)');
-          logToConsole('- clear: Clears the console.');
-          break;
-
-        case 'notepad':
-          logToConsole('Opening Notepad...');
-          window.open('notepad:', '_blank'); // Works on Windows systems
-          break;
-
-        case 'date':
-          logToConsole(`Today's date is: ${new Date().toLocaleDateString()}`);
-          break;
-
-        case 'time':
-          logToConsole(`The current time is: ${new Date().toLocaleTimeString()}`);
-          break;
-
-        case 'math':
-          if (args[1]) {
-            try {
-              const expression = args.slice(1).join(' ');
-              const result = eval(expression); // caution: eval is dangerous for untrusted input
-              logToConsole(`Result: ${result}`);
-            } catch {
-              logToConsole('Error: Invalid math expression.');
-            }
-          } else {
-            logToConsole('Usage: math [expression]');
+      fetchGitHubCommits();
+      const commands = {
+        help: () =>
+          printOutput(
+            "Available commands: dir, cd, md/mkdir, rd/rmdir, del/erase, copy, move, ren/rename, type, find, sort, cls, ver, vol, date, time, tasklist, systeminfo, ipconfig, ping, tracert, nslookup, netstat",
+          ),
+        cls: () => (consoleHistory.innerHTML = ""),
+        dir: (args) => {
+          const path = args[0] || ".";
+          printOutput(`Directory of ${path}\n`);
+          printOutput("03/08/2025  10:30 AM    <DIR>          .");
+          printOutput("03/08/2025  10:30 AM    <DIR>          ..");
+          printOutput("03/08/2025  10:30 AM             1,024 file1.txt");
+          printOutput("03/08/2025  10:30 AM    <DIR>          folder1");
+          printOutput("               2 File(s)          2,048 bytes");
+          printOutput("               3 Dir(s)   100,000,000 bytes free");
+        },
+        cd: (args) => {
+          if (!args.length) {
+            printOutput("C:\\Users\\Admin");
+            return;
           }
-          break;
-
-        case 'google':
-          if (args[1]) {
-            const query = args.slice(1).join(' ');
-            logToConsole(`Searching Google for: "${query}"`);
-            window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-          } else {
-            logToConsole('Usage: google [query]');
+          printOutput(`Changed directory to ${args[0]}`);
+        },
+        md: (args) => {
+          if (!args.length) {
+            printError("Usage: md <directory>");
+            return;
           }
-          break;
-
-        case 'weather':
-          logToConsole('Weather info placeholder: Add an API here.');
-          break;
-
-        case 'github':
-          logToConsole('Opening GitHub...');
-          window.open('https://github.com', '_blank');
-          break;
-
-        case 'color':
-          if (args[1] && args[1].length === 2) {
-            const bgColor = colors[args[1][0].toUpperCase()];
-            const fgColor = colors[args[1][1].toUpperCase()];
-
-            if (bgColor && fgColor) {
-              consoleDiv.style.backgroundColor = bgColor;
-              consoleDiv.style.color = fgColor;
-              inputField.style.backgroundColor = bgColor;
-              inputField.style.color = fgColor;
-              logToConsole(`Changed console colors to BG:${args[1][0].toUpperCase()} FG:${args[1][1].toUpperCase()}`);
+          printOutput(`Directory created: ${args[0]}`);
+        },
+        rd: (args) => {
+          if (!args.length) {
+            printError("Usage: rd <directory>");
+            return;
+          }
+          printOutput(`Directory removed: ${args[0]}`);
+        },
+        del: (args) => {
+          if (!args.length) {
+            printError("Usage: del <file>");
+            return;
+          }
+          printOutput(`Deleted file: ${args[0]}`);
+        },
+        copy: (args) => {
+          if (args.length < 2) {
+            printError("Usage: copy <source> <destination>");
+            return;
+          }
+          printOutput(`Copied ${args[0]} to ${args[1]}`);
+        },
+        move: (args) => {
+          if (args.length < 2) {
+            printError("Usage: move <source> <destination>");
+            return;
+          }
+          printOutput(`Moved ${args[0]} to ${args[1]}`);
+        },
+        ren: (args) => {
+          if (args.length < 2) {
+            printError("Usage: ren <oldname> <newname>");
+            return;
+          }
+          printOutput(`Renamed ${args[0]} to ${args[1]}`);
+        },
+        type: (args) => {
+          if (!args.length) {
+            printError("Usage: type <file>");
+            return;
+          }
+          printOutput(`Contents of ${args[0]}:\nSample file content...`);
+        },
+        find: (args) => {
+          if (args.length < 2) {
+            printError('Usage: find "string" <filename>');
+            return;
+          }
+          printOutput(`Found "${args[0]}" in ${args[1]} at line 1`);
+        },
+        sort: (args) => {
+          if (!args.length) {
+            printError("Usage: sort <filename>");
+            return;
+          }
+          printOutput(`Sorted contents of ${args[0]}`);
+        },
+        ver: () => printOutput("Microsoft Windows [Version 10.0.19045.3803]"),
+        vol: () =>
+          printOutput(
+            "Volume in drive C is Windows\nVolume Serial Number is 1234-5678",
+          ),
+        date: () => printOutput(new Date().toLocaleDateString()),
+        time: () => printOutput(new Date().toLocaleTimeString()),
+        tasklist: () => {
+          printOutput("Image Name                     PID    Memory");
+          printOutput("========================= ======== ============");
+          printOutput("System Idle Process              0         8 K");
+          printOutput("System                           4     1,248 K");
+          printOutput("Registry                        96    48,256 K");
+        },
+        systeminfo: () => {
+          printOutput("Host Name:                 DESKTOP-PC");
+          printOutput("OS Name:                   Microsoft Windows 10 Pro");
+          printOutput("OS Version:                10.0.19045");
+          printOutput("System Manufacturer:       Dell Inc.");
+          printOutput("System Model:              Latitude 5420");
+          printOutput("System Type:               x64-based PC");
+          printOutput(
+            "Processor(s):              Intel(R) Core(TM) i7-1185G7 @ 3.00GHz",
+          );
+          printOutput("Total Physical Memory:     16,384 MB");
+        },
+        ipconfig: () => {
+          printOutput("Windows IP Configuration\n");
+          printOutput("Ethernet adapter Ethernet:");
+          printOutput("   Connection-specific DNS Suffix  . : local");
+          printOutput("   IPv4 Address. . . . . . . . . . : 192.168.1.100");
+          printOutput("   Subnet Mask . . . . . . . . . . : 255.255.255.0");
+          printOutput("   Default Gateway . . . . . . . . : 192.168.1.1");
+        },
+        ping: (args) => {
+          if (!args.length) {
+            printError("Usage: ping <host>");
+            return;
+          }
+          printOutput(`Pinging ${args[0]} with 32 bytes of data:`);
+          let count = 0;
+          const interval = setInterval(() => {
+            if (count < 4) {
+              printOutput(`Reply from ${args[0]}: bytes=32 time=1ms TTL=128`);
+              count++;
             } else {
-              logToConsole('Error: Invalid color code. Use "help" for a list of valid codes.');
+              clearInterval(interval);
+              printOutput("\nPing statistics for " + args[0] + ":");
+              printOutput("    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),");
+              printOutput("Approximate round trip times in milli-seconds:");
+              printOutput("    Minimum = 1ms, Maximum = 1ms, Average = 1ms");
             }
-          } else {
-            logToConsole('Usage: color [bg][fg]. Example: color 0A');
+          }, 1000);
+        },
+        tracert: (args) => {
+          if (!args.length) {
+            printError("Usage: tracert <host>");
+            return;
           }
-          break;
-
-        case 'clear':
-          consoleDiv.innerHTML = '';
-          logToConsole('Console cleared.');
-          break;
-
-        default:
-          logToConsole(`Unknown command: "${command}". Type "help" for a list of commands.`);
-          break;
+          printOutput(`Tracing route to ${args[0]}\nOver a maximum of 30 hops:\n`);
+          let hop = 1;
+          const interval = setInterval(() => {
+            if (hop <= 3) {
+              printOutput(`  ${hop}    1 ms    1 ms    1 ms  router${hop}.local`);
+              hop++;
+            } else {
+              clearInterval(interval);
+              printOutput("\nTrace complete.");
+            }
+          }, 1000);
+        },
+        nslookup: (args) => {
+          if (!args.length) {
+            printError("Usage: nslookup <domain>");
+            return;
+          }
+          printOutput("Server:  dns.google");
+          printOutput("Address:  8.8.8.8\n");
+          printOutput("Non-authoritative answer:");
+          printOutput(`Name:    ${args[0]}`);
+          printOutput(`Address:  192.168.1.${Math.floor(Math.random() * 255)}`);
+        },
+        netstat: () => {
+          printOutput("Active Connections\n");
+          printOutput("  Proto  Local Address          Foreign Address        State");
+          printOutput(
+            "  TCP    127.0.0.1:80           0.0.0.0:0             LISTENING",
+          );
+          printOutput(
+            "  TCP    192.168.1.100:443      0.0.0.0:0             LISTENING",
+          );
+          printOutput(
+            "  TCP    192.168.1.100:3389     0.0.0.0:0             LISTENING",
+          );
+        },
+      };
+      function printOutput(text, type = "normal") {
+        const div = document.createElement("div");
+        div.className =
+          "mb-2 " + (type === "error" ? "text-red-400" : "text-gray-100");
+        div.textContent = text;
+        consoleHistory.appendChild(div);
+        consoleHistory.scrollTop = consoleHistory.scrollHeight;
       }
-    }
+      function printError(text) {
+        printOutput(text, "error");
+      }
+      function processCommand(input) {
+        const args = input.trim().split(" ");
+        const command = args.shift().toLowerCase();
 
-    logToConsole('Welcome to the Console! Type "help" for a list of commands.');
-  </script>
-</body>
+        // Handle command aliases
+        const commandAliases = {
+          mkdir: "md",
+          rmdir: "rd",
+          erase: "del",
+          rename: "ren",
+          clear: "cls",
+        };
+        const resolvedCommand = commandAliases[command] || command;
+        if (commands[resolvedCommand]) {
+          commands[resolvedCommand](args);
+        } else {
+          printError(
+            `'${command}' is not recognized as an internal or external command, operable program or batch file.`,
+          );
+        }
+      }
+      consoleInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && consoleInput.value.trim()) {
+          const input = consoleInput.value;
+          commandHistory.push(input);
+          historyIndex = commandHistory.length;
+          printOutput(`> ${input}`, "command");
+          processCommand(input);
+          consoleInput.value = "";
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (historyIndex > 0) {
+            historyIndex--;
+            consoleInput.value = commandHistory[historyIndex];
+          }
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (historyIndex < commandHistory.length - 1) {
+            historyIndex++;
+            consoleInput.value = commandHistory[historyIndex];
+          } else {
+            historyIndex = commandHistory.length;
+            consoleInput.value = "";
+          }
+        }
+      });
+      document.addEventListener("click", () => consoleInput.focus());
+    </script>
+  </body>
 </html>
